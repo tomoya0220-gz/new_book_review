@@ -28,6 +28,13 @@ export const Signup = () => {
     });
   };
 
+  const handleImageChange = (e) => {
+    setFormData({
+      ...formData,
+      image: e.target.files[0]
+    });
+  };
+
   const handleSubmit = async(e) => {
     e.preventDefault();
     setError('');
