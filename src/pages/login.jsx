@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { Navigate, useNavigate, Link } from "react-router-dom";
@@ -8,6 +7,7 @@ import { signIn } from "../authSlice";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useState } from "react";
 
 const schema = yup.object().shape({
   email: yup.string().email("有効なメールアドレスを入力してください" ).required("メールアドレスは必須です"),
@@ -25,6 +25,7 @@ export const Login = () => {
   });
 
   const onSignIn = (data) => {
+    console.log('Signing in with data:', data);
     data.preventDefault();
     axios
       .post(`${url}/signin`, data)

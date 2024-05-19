@@ -1,9 +1,9 @@
-import React, { useState } from "react";
 import axios from 'axios';
 import { url } from "../const";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link } from "react-router-dom";
 import * as Yup from 'yup'
+import { useState } from 'react';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('名前は必須'),

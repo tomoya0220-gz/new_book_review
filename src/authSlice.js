@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Cookies } from 'react-cookie';
 
-const cookies = new Cookies();
+console.log('Initializing auth slice...');
+
+const cookie = new Cookies();
 
 const initialState = {
-  isSignIn: cookies.get('token') !== undefined,
+  isSignIn: cookie.get('token') !== undefined,
 };
 
 export const authSlice = createSlice({
@@ -20,4 +22,7 @@ export const authSlice = createSlice({
   },
 });
 
+console.log('Auth slice initialized:', initialState);
+
 export const { signIn, signOut } = authSlice.actions;
+export default authSlice.reducer;
