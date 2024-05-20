@@ -1,13 +1,13 @@
-import axios from "axios";
-import { useCookies } from "react-cookie";
-import { Navigate, useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { url } from "../const";
-import { signIn } from "../authSlice";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useState } from "react";
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+import { Navigate, useNavigate, Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { url } from '../const';
+import { signIn } from '../authSlice';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useEffect, useState } from 'react';
 
 const schema = yup.object().shape({
   email: yup.string().email("有効なメールアドレスを入力してください" ).required("メールアドレスは必須です"),
@@ -15,6 +15,10 @@ const schema = yup.object().shape({
 });
 
 export const Login = () => {
+  useEffect(() => {
+    console.log('Login component mounted');
+  }, []);
+
   const auth = useSelector((state) => state.auth.isSignIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
