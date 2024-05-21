@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup'
 import { useState } from 'react';
+import Compressor from 'compressorjs';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('名前は必須'),
@@ -13,14 +14,15 @@ const validationSchema = Yup.object().shape({
 });
 
 export const Signup = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    image: null
-  });
   const [ , setError] = useState('');
 
+  // const [formData, setFormData] = useState({
+  //   name: '',
+  //   email: '',
+  //   password: '',
+  //   image: null
+  // });
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -29,14 +31,24 @@ export const Signup = () => {
   };
 
   const handleImageChange = (e) => {
-    setFormData({
-      ...formData,
-      image: e.target.files[0]
-    });
+    const file = e.target.files[0];
+    if (file) {
+      new Compressor(file, {
+        quality: 0.6,
+        success(compressedFile) {
+          setFormData({
+            ...formData,
+            image: compressedFile
+          });
+        },
+        error(err) {
+          console.error('画像の保存失敗：', err);
+        }
+      });
+    }
   };
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
+  const handleSubmit = async(values, { setSubmitting }) => {
     setError('');
     const data = new FormData();
     data.append('name', formData.name);
@@ -53,41 +65,45 @@ export const Signup = () => {
     } catch (error) {
       setError('ログインに失敗しました')
       console.error('Error creating user:', error);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <>
       <Formik
-        initialValues={{
-          name: '',
-          email: '',
-          password: '',
-          image: null
-        }}
+        initialValues={formData}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
         {({ setFieldValue }) => (
-          <form onSubmit={handleSubmit}>
+          <Form>
             <div>
               <label>Name</label>
-              <input type="text" name="name" value={formData.name} onChange={handleChange} />
+              <input type="text" name="name" onChange={handleChange} />
+              <ErrorMessage name="name" component="div" />
             </div>
             <div>
               <label>Email</label>
-              <input type="text" name="email" value={formData.email} onChange={handleChange} />
+              <input type="text" name="email" onChange={handleChange} />
+              <ErrorMessage name="email"  component="div" />
             </div>
             <div>
               <label>Password</label>
-              <input type="text" name="password" value={formData.password} onChange={handleChange} />
+              <input type="text" name="password" onChange={handleChange} />
+              <ErrorMessage name="password" component="div" />
             </div>
             <div>
               <label>Image</label>
-              <input type="file" onChange={handleImageChange} />
+              <input type="file" onChange={(e) => {
+                handleImageChange(e);
+                setFieldValue("image", e.target.files[0]);
+              }} />
+              <ErrorMessage name="image" component="div" />
             </div>
             <button type="submit">Sign up</button>
-          </form>
+          </Form>
         )}
       </Formik>
       <p>
