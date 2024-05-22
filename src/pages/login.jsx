@@ -57,8 +57,8 @@ export const Login = () => {
           <label>メールアドレス</label>
           <br />
           <input
-            type="password"
-            {...register("password")}
+            type="text"
+            {...register("text")}
           />
           {errors.password && <p>{errors.password.message}</p>}
           <br />

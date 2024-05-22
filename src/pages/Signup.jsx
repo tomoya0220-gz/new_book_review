@@ -14,32 +14,19 @@ const validationSchema = Yup.object().shape({
 });
 
 export const Signup = () => {
-  const [ , setError] = useState('');
+  const [error, setError] = useState('');
 
-  // const [formData, setFormData] = useState({
-  //   name: '',
-  //   email: '',
-  //   password: '',
-  //   image: null
-  // });
-  
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      image: e.target.files[0]
-    });
-  };
-
-  const handleImageChange = (e) => {
+  const handleImageChange = (setFieldValue) => (e) => {
     const file = e.target.files[0];
     if (file) {
       new Compressor(file, {
         quality: 0.6,
         success(compressedFile) {
-          setFormData({
-            ...formData,
-            image: compressedFile
-          });
+          const reader = new FileReader();
+          reader.readAsDataURL(compressedFile);
+          reader.onload = () => {
+            setFieldValue('image', reader.result);
+          };
         },
         error(err) {
           console.error('画像の保存失敗：', err);
@@ -50,21 +37,23 @@ export const Signup = () => {
 
   const handleSubmit = async(values, { setSubmitting }) => {
     setError('');
-    const data = new FormData();
-    data.append('name', formData.name);
-    data.append('email', formData.email);
-    data.append('password', formData.password);
-
-    if (formData.image) {
-      data.append('image', formData.image);
-    }
+    const data = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      image: values.image
+    };
 
     try {
-      const response = await axios.post(`${url}/users`, data);
+      const response = await axios.post(`${url}/users`, data, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       console.log('User created:', response.data);
     } catch (error) {
-      setError('ログインに失敗しました')
-      console.error('Error creating user:', error);
+      setError('ユーザー作成に失敗しました')
+      console.error('Error creating user:', error.response ? error.response.data : error.message);
     } finally {
       setSubmitting(false);
     }
@@ -73,7 +62,12 @@ export const Signup = () => {
   return (
     <>
       <Formik
-        initialValues={formData}
+        initialValues={{
+          name: '',
+          email: '',
+          password: '',
+          image: null
+        }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
@@ -81,25 +75,25 @@ export const Signup = () => {
           <Form>
             <div>
               <label>Name</label>
-              <input type="text" name="name" onChange={handleChange} />
+              <Field type="text" name="name" />
               <ErrorMessage name="name" component="div" />
             </div>
             <div>
               <label>Email</label>
-              <input type="text" name="email" onChange={handleChange} />
+              <Field type="text" name="email" />
               <ErrorMessage name="email"  component="div" />
             </div>
             <div>
               <label>Password</label>
-              <input type="text" name="password" onChange={handleChange} />
+              <Field type="text" name="password" />
               <ErrorMessage name="password" component="div" />
             </div>
             <div>
               <label>Image</label>
-              <input type="file" onChange={(e) => {
-                handleImageChange(e);
-                setFieldValue("image", e.target.files[0]);
-              }} />
+              <input 
+                type="file" 
+                onChange={(e) => handleImageChange(setFieldValue)(e)}
+              />
               <ErrorMessage name="image" component="div" />
             </div>
             <button type="submit">Sign up</button>
@@ -109,6 +103,7 @@ export const Signup = () => {
       <p>
         アカウントをお持ちですか？ <Link to="/login">ログイン</Link>
       </p>
+      {error && <div>{error}</div>}
     </>
   );
 }
