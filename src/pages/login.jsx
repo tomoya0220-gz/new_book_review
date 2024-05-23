@@ -30,7 +30,6 @@ export const Login = () => {
 
   const onSignIn = (data) => {
     console.log('Signing in with data:', data);
-    data.preventDefault();
     axios
       .post(`${url}/signin`, data)
       .then((res) => {
@@ -57,11 +56,18 @@ export const Login = () => {
           <label>メールアドレス</label>
           <br />
           <input
-            type="text"
-            {...register("text")}
+            type="email"
+            {...register("email")}
+          />
+          {errors.email && <p>{errors.email.message}</p>}
+          <br />
+          <label>パスワード</label>
+          <br />
+          <input
+            type="password"
+            {...register("password")}
           />
           {errors.password && <p>{errors.password.message}</p>}
-          <br />
           <button type="submit">
             ログイン
           </button>
