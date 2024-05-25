@@ -23,28 +23,26 @@ export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState();
-  const [ , setCookie] = useCookies(['token']);
+  const [, setCookie] = useCookies(['token']);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });
 
-  const onSignIn = (data) => {
+  const onSignIn = async (data) => {
     console.log('Signing in with data:', data);
-    axios
-      .post(`${url}/signin`, data)
-      .then((res) => {
-        setCookie('token', res.data.token);
-        dispatch(signIn());
-        navigate('/');
-      })
-      .catch((err) => {
-        const errorMessage = err.response && err.response.data ? err.response.message : 'ログインに失敗しました';
-        setErrorMessage(errorMessage);
-      });
+    try {
+      const response = await axios.post(`${url}/signin`, data);
+      setCookie('token', response.data.token, { path: '/' });
+      dispatch(signIn());
+      navigate('/');
+    } catch (err) {
+      const error = err.response && err.response.data ? err.response.data.message : 'ログインに失敗しました';
+      setErrorMessage(error);
+    }
   };
 
   if (auth) {
-    return <Navigate to="/" />;
+    return <Navigate to="/books" />;
   }
 
   return (

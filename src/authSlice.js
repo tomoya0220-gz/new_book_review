@@ -15,11 +15,11 @@ export const authSlice = createSlice({
   reducers: {
     signIn: (state) => {
       state.isSignIn = true;
-      cookie.set('token', 'some-token-value'); // Tokenを設定
+      cookie.set('token', 'some-token-value');
     },
     signOut: (state) => {
       state.isSignIn = false;
-      cookie.remove('token'); // Tokenを削除
+      cookie.remove('token');
     },
   },
 });
