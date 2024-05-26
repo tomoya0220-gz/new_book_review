@@ -3,31 +3,25 @@ import axios from "axios";
 import { url } from "../const";
 import './BookReviewList.css';
 import { useCookies } from "react-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { Pagination } from "../components/Pagination";
+import { fetchReviews } from "../redux/slices/bookSlice";
 
 export const BookReviewList = () => {
+  const dispatch = useDispatch();
+  const { reviews, status, error } = useSelector((state) => state.books);
   const [cookies] = useCookies(['token']);
-  const [reviews, setReviews] = useState([]);
-  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const response = await axios.get(`${url}/public/books`, {
-          headers: {
-            Authorization: `Bearer ${cookies.token}`
-          }
-        });
-        setReviews(response.data.slice(0, 10));
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
-        setError('書籍レビューの取得に失敗しました');
-      }
-    };
-    fetchReviews();
-  }, [cookies.token]);
+    dispatch(fetchReviews(0));
+  }, [dispatch, cookies.token]);
 
-  if (error) {
-    return <div>{error}</div>;
+  if (status === 'loading') {
+    return <p>読み込み中...</p>;
+  }
+
+  if (status === 'failed') {
+    return <p>{error}</p>;
   }
 
   return (
@@ -41,6 +35,7 @@ export const BookReviewList = () => {
           </div>
         ))}
       </div>
+      <Pagination />
     </>
   );
 };
