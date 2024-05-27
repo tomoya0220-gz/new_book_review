@@ -36,6 +36,9 @@ export const BookReviewList = () => {
     fetchReviews();
   }, [currentPage]);
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   console.log('Rendering BookReviewList with currentPage:', currentPage);
 
@@ -61,7 +64,7 @@ export const BookReviewList = () => {
       <Pagination
         currentPage={currentPage}
         totalPages={Math.ceil(totalReviews / reviewsPerPage)}
-        onPageChange={(page) => setCurrentPage(page)}
+        onPageChange={handlePageChange}
       />
     </>
   );
