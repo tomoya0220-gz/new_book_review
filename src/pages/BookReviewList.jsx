@@ -1,27 +1,50 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { url } from "../const";
 import './BookReviewList.css';
-import { useCookies } from "react-cookie";
-import { useDispatch, useSelector } from "react-redux";
-import { Pagination } from "../components/Pagination";
-import { fetchReviews } from "../redux/slices/bookSlice";
+import { url } from "../const";
+import axios from "axios";
+import { Pagination } from "./Pagination";
 
 export const BookReviewList = () => {
-  const dispatch = useDispatch();
-  const { reviews, status, error } = useSelector((state) => state.books);
-  const [cookies] = useCookies(['token']);
+  const [reviews, setReviews] = useState([]);
+  const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalReviews, setTotalReviews] = useState(0);
+  const reviewsPerPage = 10;
 
   useEffect(() => {
-    dispatch(fetchReviews(0));
-  }, [dispatch, cookies.token]);
+    const fetchReviews = async () => {
+      try {
+        console.log('Fetchinig reviews for page:', currentPage);
+        const offset = (currentPage - 1) * reviewsPerPage;
+        const response = await axios.get(`${url}/public/books`, {
+          params: { offset }
+        });
+        console.log('Response data:', response.data);
+        if (Array.isArray(response.data)) {
+          setReviews(response.data);
+          setTotalReviews(response.data.length);
+          console.log('Response set to:', response.data);
+        } else {
+          console.error('Invalid response format:', response.data);
+          setError('Invalid response format');
+        }
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+        setError('書籍レビューの取得に失敗しました');
+      }
+    };
+    fetchReviews();
+  }, [currentPage]);
 
-  if (status === 'loading') {
-    return <p>読み込み中...</p>;
+
+  console.log('Rendering BookReviewList with currentPage:', currentPage);
+
+  if (error) {
+    return <div>{error}</div>;
   }
 
-  if (status === 'failed') {
-    return <p>{error}</p>;
+  if (reviews.length === 0) {
+    return <p>レビューが見つかりません。</p>
   }
 
   return (
@@ -35,7 +58,11 @@ export const BookReviewList = () => {
           </div>
         ))}
       </div>
-      <Pagination />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(totalReviews / reviewsPerPage)}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
     </>
   );
 };
