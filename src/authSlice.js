@@ -7,18 +7,20 @@ const cookie = new Cookies();
 
 const initialState = {
   isSignIn: cookie.get('token') !== undefined,
+  token: cookie.get('token') || null,
 };
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    signIn: (state) => {
+    signIn: (state, action) => {
       state.isSignIn = true;
-      cookie.set('token', 'some-token-value');
+      cookie.set('token', action.payload.token);
     },
     signOut: (state) => {
       state.isSignIn = false;
+      state.token = null;
       cookie.remove('token');
     },
   },

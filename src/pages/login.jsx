@@ -32,8 +32,9 @@ export const Login = () => {
     console.log('Signing in with data:', data);
     try {
       const response = await axios.post(`${url}/signin`, data);
-      setCookie('token', response.data.token, { path: '/' });
-      dispatch(signIn());
+      const token = response.data.token;
+      setCookie('token', token, { path: '/' });
+      dispatch(signIn({ token }));
       navigate('/');
     } catch (err) {
       const error = err.response && err.response.data ? err.response.data.message : 'ログインに失敗しました';
@@ -42,7 +43,7 @@ export const Login = () => {
   };
 
   if (auth) {
-    return <Navigate to="/books" />;
+    return <Navigate to="/public/books" />;
   }
 
   return (
