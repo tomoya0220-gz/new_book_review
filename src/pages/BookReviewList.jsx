@@ -3,7 +3,8 @@ import './BookReviewList.css';
 import { url } from "../const";
 import axios from "axios";
 import { Pagination } from "./Pagination";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 export const BookReviewList = () => {
   const [reviews, setReviews] = useState([]);
@@ -11,6 +12,8 @@ export const BookReviewList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalReviews, setTotalReviews] = useState(0);
   const reviewsPerPage = 10;
+  const [cookies] = useCookies(['token']);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -41,6 +44,28 @@ export const BookReviewList = () => {
     setCurrentPage(newPage);
   };
 
+  const handleLog = async (reviewId) => {
+    try {
+      const token = cookies.token;
+      if (!token) {
+        throw new Error('認証トークンがありません');
+      }
+      await axios.post(`${url}/logs`, {selectBookId: reviewId }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('ログが送信されました:', reviewId);
+    } catch (error) {
+      console.error('ログの送信に失敗しました:', error);
+    }
+  };
+
+  const handleReviewClick = (reviewId) => {
+    handleLog(reviewId);
+    navigate(`/books/${reviewId}`);
+  };
+
   console.log('Rendering BookReviewList with currentPage:', currentPage);
 
   if (error) {
@@ -58,7 +83,7 @@ export const BookReviewList = () => {
           <div key={review.id} className="book-review-list_item">
             <h2 className="book-review-list_title">{review.title}</h2>
             <p className="book-review-list_content">{review.content}</p>
-            <a href={review.url}>詳細はこちら</a>
+            <Link to="#" onClick={() => handleReviewClick(review.id)}>詳細はこちら</Link>
             <Link to='/new'>書籍レビューを登録</Link>
           </div>
         ))}
