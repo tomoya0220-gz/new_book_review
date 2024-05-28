@@ -3,6 +3,7 @@ import './BookReviewList.css';
 import { url } from "../const";
 import axios from "axios";
 import { Pagination } from "./Pagination";
+import { Link } from "react-router-dom";
 
 export const BookReviewList = () => {
   const [reviews, setReviews] = useState([]);
@@ -17,7 +18,7 @@ export const BookReviewList = () => {
         console.log('Fetchinig reviews for page:', currentPage);
         const offset = (currentPage - 1) * reviewsPerPage;
         const response = await axios.get(`${url}/public/books`, {
-          params: { offset }
+          params: { offset, limit: reviewsPerPage }
         });
         console.log('Response data:', response.data);
         if (Array.isArray(response.data)) {
@@ -58,6 +59,7 @@ export const BookReviewList = () => {
             <h2 className="book-review-list_title">{review.title}</h2>
             <p className="book-review-list_content">{review.content}</p>
             <a href={review.url}>詳細はこちら</a>
+            <Link to='/new'>書籍レビューを登録</Link>
           </div>
         ))}
       </div>

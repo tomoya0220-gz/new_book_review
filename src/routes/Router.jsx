@@ -4,6 +4,7 @@ import { Login } from '../pages/Login';
 import { BookReviewList } from '../pages/BookReviewList';
 import { useSelector } from 'react-redux';
 import { Profile } from '../pages/Profile';
+import { NewBookReview } from '../pages/NewBookReview';
 
 export const Router = () => {
   const auth = useSelector((state) => state.auth.isSignIn);
@@ -17,6 +18,8 @@ export const Router = () => {
         {auth ? (
           <>
             <Route path="/public/books" element={<BookReviewList />}  />
+            <Route path="/new" element={<NewBookReview />}  />
+            <Route path="/profile" element={<Profile />}  />
             <Route path="/" element={<Navigate to="/public/books" replace />}  />
             <Route path="*" element={<Navigate to="/public/books" replace />}  />
           </>

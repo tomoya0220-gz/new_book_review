@@ -2,13 +2,15 @@ import { url } from "../const";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { signOut } from "../authSlice";
 
 export const Profile = () => {
   const auth = useSelector((state) => state.auth.isSignIn);
   const [error, setError] = useState('');
-  const [cookies] = useCookies(['token']);
+  const [cookies, removeCookie] = useCookies(['token']);
   const [name, setName] = useState('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -47,6 +49,11 @@ export const Profile = () => {
     }
   };
 
+  const handleSignOut = () => {
+    removeCookie('token');
+    dispatch(signOut());
+  };
+
   return (
     <>
       <h2>ユーザー情報更新</h2>
@@ -60,6 +67,7 @@ export const Profile = () => {
         />
       </div>
       <button onClick={handleUpdate}>更新</button>
+      <button onClick={handleSignOut}>ログアウト</button>
     </>
   );
 };
