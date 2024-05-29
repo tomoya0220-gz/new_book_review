@@ -61,8 +61,8 @@ export const BookReviewList = () => {
     }
   };
 
-  const handleReviewClick = (reviewId) => {
-    handleLog(reviewId);
+  const handleReviewClick = async (reviewId) => {
+    await handleLog(reviewId);
     navigate(`/books/${reviewId}`);
   };
 
@@ -83,7 +83,7 @@ export const BookReviewList = () => {
           <div key={review.id} className="book-review-list_item">
             <h2 className="book-review-list_title">{review.title}</h2>
             <p className="book-review-list_content">{review.content}</p>
-            <Link to="#" onClick={() => handleReviewClick(review.id)}>詳細はこちら</Link>
+            <button onClick={() => handleReviewClick(review.id)}>詳細はこちら</button>
             <Link to='/new'>書籍レビューを登録</Link>
           </div>
         ))}
