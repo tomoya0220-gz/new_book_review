@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { url } from "../const";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import './BookReviewDetail.css';
@@ -53,6 +53,11 @@ export const BookReviewDetail = () => {
       <p>詳細: {review.detail}</p>
       <p>レビュー: {review.reviewer}</p>
       <p>自身のレビュー: {review.isMine ? 'はい' : 'いいえ'}</p>
+      {review.isMine && (
+        <>
+          <Link to='/edit/${review.id}'>編集</Link>
+        </>
+      )}
     </>
   );
 };
