@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate, useParams } from "react-router-dom"
 import { url } from "../const";
@@ -17,6 +17,7 @@ export const EditBookReview = () => {
   useEffect(() => {
     const fetchReview = async () => {
       try {
+        console.log('Fetching review for id:', id);
         const token = cookies.token;
         if (!token) {
           throw new Error('認証トークンがありません');
@@ -27,11 +28,13 @@ export const EditBookReview = () => {
           },
         });
         const data = response.data;
+        console.log('Fetched data:', data);
         setTitle(data.title);
-        setBookUrl(data.bookUrl);
+        setBookUrl(data.url);
         setDetail(data.detail);
         setReview(data.review);
       } catch (error) {
+        console.error('Error fetching review:', error);
         setMessage('書籍情報の取得に失敗しました');
       }
     };
@@ -53,6 +56,7 @@ export const EditBookReview = () => {
       setMessage('書籍レビューを更新しました');
       navigate(`/books/${id}`);
     } catch (error) {
+      console.error('Error updating review:', error);
       setMessage('書籍レビューの更新に失敗しました');
     }
   };
@@ -71,6 +75,7 @@ export const EditBookReview = () => {
       setMessage('書籍レビューを削除しました');
       navigate('/public/books');
     } catch (error) {
+      console.error('Error deleting review:', error);
       setMessage('書籍レビューの削除に失敗しました');
     }
   };
@@ -87,6 +92,12 @@ export const EditBookReview = () => {
           placeholder="タイトル"
         />
         <input
+          type='text'
+          value={bookUrl}
+          onChange={(e) => setBookUrl(e.target.value)}
+          placeholder="URL"
+        />
+        <input
           type="text"
           value={detail}
           onChange={(e) => setDetail(e.target.value)}
@@ -101,5 +112,5 @@ export const EditBookReview = () => {
         <button type='button' onClick={handleDelete}>削除</button>
       </form>
     </>
-  )
-}
+  );
+};

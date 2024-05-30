@@ -55,7 +55,7 @@ export const BookReviewDetail = () => {
       <p>自身のレビュー: {review.isMine ? 'はい' : 'いいえ'}</p>
       {review.isMine && (
         <>
-          <Link to='/edit/${review.id}'>編集</Link>
+          <Link to={`/edit/${review.id}`}>編集</Link>
         </>
       )}
     </>

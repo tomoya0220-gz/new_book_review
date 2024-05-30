@@ -22,7 +22,7 @@ export const Router = () => {
             <Route path="/public/books" element={<BookReviewList />}  />
             <Route path="/new" element={<NewBookReview />}  />
             <Route path="/books/:id" element={<BookReviewDetail />} />
-            <Route path="/books/:id" element={<EditBookReview />} />
+            <Route path="/edit/:id" element={<EditBookReview />} />
             <Route path="/profile" element={<Profile />}  />
             <Route path="/" element={<Navigate to="/public/books" replace />}  />
             <Route path="*" element={<Navigate to="/public/books" replace />}  />
