@@ -11,6 +11,7 @@ export const BookReviewList = () => {
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalReviews, setTotalReviews] = useState(0);
+  const [loading, setLoading] = useState(true);
   const reviewsPerPage = 10;
   const [cookies] = useCookies(['token']);
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ export const BookReviewList = () => {
         if (Array.isArray(response.data)) {
           setReviews(response.data);
           setTotalReviews(response.data.length);
+          setLoading(false);
           console.log('Response set to:', response.data);
         } else {
           console.error('Invalid response format:', response.data);
@@ -78,21 +80,32 @@ export const BookReviewList = () => {
 
   return (
     <>
-      <div className="book-review-list">
-        {reviews.map((review) => (
-          <div key={review.id} className="book-review-list_item">
-            <h2 className="book-review-list_title">{review.title}</h2>
-            <p className="book-review-list_content">{review.content}</p>
-            <button onClick={() => handleReviewClick(review.id)}>詳細はこちら</button>
-            <Link to='/new'>書籍レビューを登録</Link>
-          </div>
-        ))}
-      </div>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={Math.ceil(totalReviews / reviewsPerPage)}
-        onPageChange={handlePageChange}
-      />
+      {loading ? (
+        <div className="skeleton">
+          {Array.from({ length: reviewsPerPage }).map((_, index) => (
+            <div key={index} className="skeleton-item">
+              <div className="skeleton-title"></div>
+              <div className="skeleton-content"></div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="book-review-list">
+          {reviews.map((review) => (
+            <div key={review.id} className="book-review-list_item">
+              <h2 className="book-review-list_title">{review.title}</h2>
+              <p className="book-review-list_content">{review.content}</p>
+              <button onClick={() => handleReviewClick(review.id)}>詳細はこちら</button>
+              <Link to='/new'>書籍レビューを登録</Link>
+            </div>
+          ))}
+        </div>
+      )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalReviews / reviewsPerPage)}
+          onPageChange={handlePageChange}
+        />
     </>
   );
 };
