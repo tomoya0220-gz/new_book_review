@@ -1,7 +1,7 @@
 import './App.css';
 import { Router } from './routes/Router';
 import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { signIn } from './authSlice';
 import { Cookies } from 'react-cookie';
 import { Header } from './pages/Header';

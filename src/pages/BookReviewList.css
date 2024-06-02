@@ -11,6 +11,7 @@
   border-radius: 0.5rem;
   background-color: #f0f0f0;
   animation: pulse 1.5s infinite ease-in-out;
+  min-height: 300px;
 }
 
 .skeleton-title {
@@ -50,7 +51,13 @@
   padding: 1em;
   border-radius: 4px;
   background-color: #000000;
+  color: white;
   min-height: 300px;
+  max-width: 600px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-betweem;
 }
 
 .book-review-list_title {
