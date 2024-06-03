@@ -1,13 +1,12 @@
 import { defineConfig } from 'vite';
-import { reactRefresh } from '@vitejs/plugin-react-refresh';
-import { compression } from 'vite-plugin-compression';
 import react from '@vitejs/plugin-react';
+import viteCompression from 'vite-plugin-compression';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    viteCompressino({
+    viteCompression({
       verbose: true,
       disable: false,
       deleteOriginFile: false,
