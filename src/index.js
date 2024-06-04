@@ -5,6 +5,7 @@ import { CookiesProvider } from 'react-cookie';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { BrowserRouter } from 'react-router-dom';
+import 'dotenv/config';
 
 console.log('Initializing application...');
 

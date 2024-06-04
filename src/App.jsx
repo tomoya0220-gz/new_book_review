@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { signIn } from './authSlice';
 import { Cookies } from 'react-cookie';
 import { Header } from './pages/Header';
+import 'dotenv/config';
 
 function App() {
   const cookies = new Cookies();
