@@ -50,7 +50,7 @@ export const Login = () => {
     <>
       <main>
         <h2>ログイン</h2>
-        <p>{errorMessage}</p>
+        <p className='error-message'>{errorMessage}</p>
         <form onSubmit={handleSubmit(onSignIn)}>
           <label>メールアドレス</label>
           <br />
