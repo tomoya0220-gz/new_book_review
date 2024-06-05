@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Login', () => {
   test('ログイン成功', async({ page }) => {
     console.log('ページ');
-    await page.goto('http://localhost:5174/login');
+    await page.goto('http://localhost:5173/login');
     console.log('email');
     await page.waitForSelector('input[name="email"]', { state: 'visible' });
     console.log('email');
@@ -13,7 +13,7 @@ test.describe('Login', () => {
     console.log('button');
     await page.click('button[type="submit"]');
     console.log('url');
-    await expect(page).toHaveURL('http://localhost:5174/');
+    await expect(page).toHaveURL('http://localhost:5173/public/books');
     const cookies = await page.context().cookies();
     const tokenCookie = cookies.find(cookie => cookie.name === 'token');
     expect(tokenCookie).toBeDefined();
@@ -21,7 +21,7 @@ test.describe('Login', () => {
 
   test('エラーメッセージの表示', async ({ page }) => {
     console.log('ページ');
-    await page.goto('http://localhost:5174/login');
+    await page.goto('http://localhost:5173/login');
 
     console.log('email');
     await page.waitForSelector('input[name="email"]', { state: 'visible' });
