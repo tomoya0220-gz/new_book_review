@@ -37,7 +37,9 @@ export const Login = () => {
       dispatch(signIn({ token }));
       navigate('/');
     } catch (err) {
-      const error = err.response && err.response.data ? err.response.data.message : 'ログインに失敗しました';
+      console.error('Login error:', err);
+      const error = err.response && err.response.data ? err.response.data.ErrorMessageJP : 'ログインに失敗しました';
+      console.log('Error message set:', error);
       setErrorMessage(error);
     }
   };
@@ -50,7 +52,7 @@ export const Login = () => {
     <>
       <main>
         <h2>ログイン</h2>
-        <p className='error-message'>{errorMessage}</p>
+        {errorMessage && <p className='error-message'>{errorMessage}</p>}
         <form onSubmit={handleSubmit(onSignIn)}>
           <label>メールアドレス</label>
           <br />
