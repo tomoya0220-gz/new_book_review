@@ -54,17 +54,19 @@ export const Login = () => {
         <h2>ログイン</h2>
         {errorMessage && <p className='error-message'>{errorMessage}</p>}
         <form onSubmit={handleSubmit(onSignIn)}>
-          <label>メールアドレス</label>
+          <label htmlFor='email'>メールアドレス</label>
           <br />
           <input
+            id='email'
             type="email"
             {...register("email")}
           />
           {errors.email && <p>{errors.email.message}</p>}
           <br />
-          <label>パスワード</label>
+          <label htmlFor='password'>パスワード</label>
           <br />
           <input
+            id='password'
             type="password"
             {...register("password")}
           />
