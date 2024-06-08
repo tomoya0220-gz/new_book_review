@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { url } from '../const';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup'
 import { useState } from 'react';
 import Compressor from 'compressorjs';
@@ -15,6 +15,7 @@ const validationSchema = Yup.object().shape({
 
 export const Signup = () => {
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleImageChange = (setFieldValue) => (e) => {
     const file = e.target.files[0];
@@ -22,11 +23,7 @@ export const Signup = () => {
       new Compressor(file, {
         quality: 0.6,
         success(compressedFile) {
-          const reader = new FileReader();
-          reader.readAsDataURL(compressedFile);
-          reader.onload = () => {
-            setFieldValue('image', reader.result);
-          };
+          setFieldValue('image', compressedFile);          
         },
         error(err) {
           console.error('画像の保存失敗：', err);
@@ -37,20 +34,33 @@ export const Signup = () => {
 
   const handleSubmit = async(values, { setSubmitting }) => {
     setError('');
-    const data = {
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      image: values.image
-    };
-
     try {
+      const formData = new FormData();
+      formData.append('icon', values.image);
+
+      const uploadResponse = await axios.post(`${url}/uploads`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });      
+
+      console.log('Image response:', uploadResponse.data);
+      const iconUrl = uploadResponse.data.iconUrl;
+    
+      const data = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        icon: iconUrl
+      };
+
       const response = await axios.post(`${url}/users`, data, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
       console.log('User created:', response.data);
+      navigate('/login');
     } catch (error) {
       setError('ユーザー作成に失敗しました')
       console.error('Error creating user:', error.response ? error.response.data : error.message);

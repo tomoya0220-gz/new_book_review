@@ -10,7 +10,7 @@ export const BookReviewList = () => {
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalReviews, setTotalReviews] = useState(0);
+  const [, setTotalReviews] = useState(0);
   const [loading, setLoading] = useState(true);
   const reviewsPerPage = 10;
   const [cookies] = useCookies(['token']);
@@ -103,7 +103,7 @@ export const BookReviewList = () => {
       )}
         <Pagination
           currentPage={currentPage}
-          totalPages={Math.ceil(totalReviews / reviewsPerPage)}
+          totalPages={10}
           onPageChange={handlePageChange}
         />
     </>

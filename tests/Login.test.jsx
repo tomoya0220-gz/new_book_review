@@ -3,7 +3,6 @@ import { describe, expect, test, vi } from "vitest";
 import axios from "axios";
 import { Login } from "../src/pages/Login";
 import { BrowserRouter } from "react-router-dom";
-import App from "../src/App";
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from '../src/authSlice';
 import { Provider } from "react-redux";
