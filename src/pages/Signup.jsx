@@ -35,35 +35,49 @@ export const Signup = () => {
   const handleSubmit = async(values, { setSubmitting }) => {
     setError('');
     try {
+      const userData = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      };
+
+      const userResponse = await axios.post(`${url}/users`,  userData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const { token, id } = userResponse.data;
+      console.log('User created:', userResponse.data);
+
       const formData = new FormData();
       formData.append('icon', values.image);
 
       const uploadResponse = await axios.post(`${url}/uploads`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
         }
-      });      
+      });
 
       console.log('Image response:', uploadResponse.data);
       const iconUrl = uploadResponse.data.iconUrl;
-    
-      const data = {
-        name: values.name,
-        email: values.email,
-        password: values.password,
-        icon: iconUrl
-      };
 
-      const response = await axios.post(`${url}/users`, data, {
+      const updateUseResponse = await axios.put(`${url}/users`,{
+        name: values.name,
+        icon: iconUrl
+      }, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
       });
-      console.log('User created:', response.data);
+
+      console.log('User updated:', uploadResponse.data);
       navigate('/login');
     } catch (error) {
-      setError('ユーザー作成に失敗しました')
-      console.error('Error creating user:', error.response ? error.response.data : error.message);
+      setError('ユーザー作成に失敗しました');
+      console.error('Error:', error.response ? error.response.data : error.message);
     } finally {
       setSubmitting(false);
     }
