@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup'
 import { useState } from 'react';
 import Compressor from 'compressorjs';
+import { useDispatch } from 'react-redux';
+import { signIn } from '../authSlice';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('名前は必須'),
@@ -16,6 +18,7 @@ const validationSchema = Yup.object().shape({
 export const Signup = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleImageChange = (setFieldValue) => (e) => {
     const file = e.target.files[0];
@@ -47,9 +50,10 @@ export const Signup = () => {
         }
       });
 
-      const { token, id } = userResponse.data;
+      const { token, user } = userResponse.data;
       console.log('User created:', userResponse.data);
-
+      dispatch(signIn({ token, user }));
+      
       const formData = new FormData();
       formData.append('icon', values.image);
 
@@ -63,7 +67,7 @@ export const Signup = () => {
       console.log('Image response:', uploadResponse.data);
       const iconUrl = uploadResponse.data.iconUrl;
 
-      const updateUseResponse = await axios.put(`${url}/users`,{
+      await axios.put(`${url}/users`,{
         name: values.name,
         icon: iconUrl
       }, {
@@ -74,7 +78,7 @@ export const Signup = () => {
       });
 
       console.log('User updated:', uploadResponse.data);
-      navigate('/login');
+      navigate('/books');
     } catch (error) {
       setError('ユーザー作成に失敗しました');
       console.error('Error:', error.response ? error.response.data : error.message);

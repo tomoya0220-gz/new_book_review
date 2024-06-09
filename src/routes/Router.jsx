@@ -17,10 +17,11 @@ export const Router = () => {
       <Routes>
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/public/books" element={<BookReviewList />}  />
         {auth ? (
           <>
-            <Route path="/public/books" element={<BookReviewList />}  />
+            <Route path="/books" element={<BookReviewList />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/new" element={<NewBookReview />}  />
             <Route path="/books/:id" element={<BookReviewDetail />} />
             <Route path="/edit/:id" element={<EditBookReview />} />
