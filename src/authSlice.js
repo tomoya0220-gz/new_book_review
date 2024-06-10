@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Cookies } from 'react-cookie';
-
-console.log('Initializing auth slice...');
+import { createBrowserHistory } from 'history';
 
 const cookie = new Cookies();
+export const history = createBrowserHistory();
 
 const getUserFromCookie = () => {
   const user = cookie.get('user');
@@ -30,6 +30,7 @@ export const authSlice = createSlice({
       cookie.set('token', action.payload.token);
       cookie.set('user', JSON.stringify(action.payload.user));
       console.log('Signed in:', state);
+      history.push('/books');
     },
     signOut: (state) => {
       state.isSignIn = false;
@@ -38,6 +39,7 @@ export const authSlice = createSlice({
       cookie.remove('token');
       cookie.remove('user');
       console.log('Signed out:', state);
+      history.push('/login');
     },
   },
 });

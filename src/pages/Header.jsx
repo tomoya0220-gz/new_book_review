@@ -5,10 +5,9 @@ import React from "react";
 
 
 export const Header = () => {
-  const isSignIn = useSelector((state) => state.auth.isSignIn);
+  const { isSignIn, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
 
   console.log('Auth status:', isSignIn);
   console.log('User:', user);
@@ -25,7 +24,7 @@ export const Header = () => {
           <ul>
             {isSignIn ? (
               <>
-                <li>{user && `ようこそ、&{name}さん`}</li>
+                <li>{user && `ようこそ、${user.name}さん`}</li>
                 <li><Link to="/profile">ユーザー情報編集</Link></li>
                 <li><button onClick={handleSignOut}>ログアウト</button></li>
               </>
