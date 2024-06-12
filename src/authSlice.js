@@ -8,7 +8,12 @@ export const history = createBrowserHistory();
 const getUserFromCookie = () => {
   const user = cookie.get('user');
   console.log('User from cookie:', user);
-  return user && user !== 'undefined' ? JSON.parse(user) : null;
+  try {
+    return user && typeof user === 'string' ? JSON.parse(user) : null;
+  } catch (error) {
+    console.error('Error:', error);
+    return null;
+  }
 };
 
 const initialState = {
