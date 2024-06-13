@@ -15,7 +15,6 @@ export const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        console.log('Token:', cookies.token);
         const response = await axios.get(`${url}/users`, {
           headers: {
             Authorization: `Bearer ${cookies.token}`,
@@ -23,7 +22,6 @@ export const Profile = () => {
         });
         setName(response.data.name);
       } catch (error) {
-        console.error('Error fetching user data:', error);
         setError('ユーザー情報の取得に失敗しました');
       }
     };
@@ -44,7 +42,6 @@ export const Profile = () => {
       });
       setError('ユーザー情報を更新しました');
     } catch (err) {
-      console.error('Error updating user info:', error);
       setError('ユーザー情報の更新に失敗しました');
     }
   };
@@ -63,7 +60,7 @@ export const Profile = () => {
         <input 
           type='text'
           value={name}
-          onChange={(e) => setName(e.targer.value)}
+          onChange={(e) => setName(e.target.value)}
         />
       </div>
       <button onClick={handleUpdate}>更新</button>

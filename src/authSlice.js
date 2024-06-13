@@ -7,11 +7,9 @@ export const history = createBrowserHistory();
 
 const getUserFromCookie = () => {
   const user = cookie.get('user');
-  console.log('User from cookie:', user);
   try {
     return user && typeof user === 'string' ? JSON.parse(user) : null;
   } catch (error) {
-    console.error('Error:', error);
     return null;
   }
 };
@@ -34,7 +32,6 @@ export const authSlice = createSlice({
       state.user = action.payload.user;
       cookie.set('token', action.payload.token);
       cookie.set('user', JSON.stringify(action.payload.user));
-      console.log('Signed in:', state);
       history.push('/books');
     },
     signOut: (state) => {
@@ -43,13 +40,10 @@ export const authSlice = createSlice({
       state.user = null;
       cookie.remove('token');
       cookie.remove('user');
-      console.log('Signed out:', state);
       history.push('/login');
     },
   },
 });
-
-console.log('Auth slice initialized:', initialState);
 
 export const { signIn, signOut } = authSlice.actions;
 export default authSlice.reducer;

@@ -10,12 +10,11 @@ import axios from "axios";
 export const Header = () => {
   const auth = useSelector((state) => state.auth);
   const { isSignIn, user } = auth;
-  const [cookies, setCookie, removeCookie] = useCookies(['token', 'user']);
+  const [cookies, setCookie] = useCookies(['token', 'user']);
   const [localUserName, setLocalUserName] = useState(() => {
     try {
       return user ? user.name : cookies.user ? JSON.parse(cookies.user).name : '';
     } catch (e) {
-      console.error('Error cookies:', e);
       return '';
     }
   });
@@ -33,12 +32,11 @@ export const Header = () => {
             },
           });
           const fetchedUserName = response.data.name;
-          console.log('Fetched user name:', fetchedUserName);
           setLocalUserName(fetchedUserName);
           setCookie('user', JSON.stringify({ name: fetchedUserName}), { path: '/' });
           dispatch(signIn({ token: cookies.token, user: {name: fetchedUserName } }));
         } catch (error) {
-          console.error('Error fetching user data in Header:', error);
+          console.error('Error in Header:', error);
         }
       }
       setLoading(false);
@@ -47,10 +45,6 @@ export const Header = () => {
     fetchProfile();
   }, [isSignIn, cookies.token, localUserName, dispatch, setCookie]);
 
-  console.log('Auth status:', isSignIn);
-  console.log('User from state:', user);
-  console.log('User from cookies:', cookies.user);
-  console.log('Local user name:', localUserName);
 
   const handleSignOut = () => {
     dispatch(signOut());
