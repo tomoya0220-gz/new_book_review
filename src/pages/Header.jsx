@@ -11,7 +11,14 @@ export const Header = () => {
   const auth = useSelector((state) => state.auth);
   const { isSignIn, user } = auth;
   const [cookies, setCookie, removeCookie] = useCookies(['token', 'user']);
-  const [localUserName, setLocalUserName] = useState(user ? user.name : cookies.user ? JSON.parse(cookies.user).name : '');
+  const [localUserName, setLocalUserName] = useState(() => {
+    try {
+      return user ? user.name : cookies.user ? JSON.parse(cookies.user).name : '';
+    } catch (e) {
+      console.error('Error cookies:', e);
+      return '';
+    }
+  });
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,7 +48,7 @@ export const Header = () => {
   }, [isSignIn, cookies.token, localUserName, dispatch, setCookie]);
 
   console.log('Auth status:', isSignIn);
-  console.log('User from state:', userName);
+  console.log('User from state:', user);
   console.log('User from cookies:', cookies.user);
   console.log('Local user name:', localUserName);
 
@@ -62,7 +69,7 @@ export const Header = () => {
           <ul>
             {isSignIn ? (
               <>
-                <li>{(userName || cookies.user) && `ようこそ、${userName || cookies.user}さん`}</li>
+                <li>{localUserName && `ようこそ、${localUserName}さん`}</li>
                 <li><Link to="/profile">ユーザー情報編集</Link></li>
                 <li><button onClick={handleSignOut}>ログアウト</button></li>
               </>
