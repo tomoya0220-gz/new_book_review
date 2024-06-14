@@ -51,7 +51,6 @@ export const Signup = () => {
       });
 
       const { token, user } = userResponse.data;
-      console.log('User created:', userResponse.data);
       dispatch(signIn({ token, user }));
       
       const formData = new FormData();
@@ -64,7 +63,6 @@ export const Signup = () => {
         }
       });
 
-      console.log('Image response:', uploadResponse.data);
       const iconUrl = uploadResponse.data.iconUrl;
 
       await axios.put(`${url}/users`,{
@@ -77,11 +75,9 @@ export const Signup = () => {
         }
       });
 
-      console.log('User updated:', uploadResponse.data);
       navigate('/books');
     } catch (error) {
       setError('ユーザー作成に失敗しました');
-      console.error('Error:', error.response ? error.response.data : error.message);
     } finally {
       setSubmitting(false);
     }

@@ -29,7 +29,6 @@ export const Login = () => {
   });
 
   const onSignIn = async (data) => {
-    console.log('Signing in with data:', data);
     try {
       const response = await axios.post(`${url}/signin`, data);
       const token = response.data.token;
@@ -37,9 +36,7 @@ export const Login = () => {
       dispatch(signIn({ token }));
       navigate('/');
     } catch (err) {
-      console.error('Login error:', err);
       const error = err.response && err.response.data ? err.response.data.ErrorMessageJP : 'ログインに失敗しました';
-      console.log('Error message set:', error);
       setErrorMessage(error);
     }
   };

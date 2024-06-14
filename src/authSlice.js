@@ -20,8 +20,6 @@ const initialState = {
   user: getUserFromCookie(),
 };
 
-console.log('Initial state:', initialState);
-
 export const authSlice = createSlice({
   name: 'auth',
   initialState,

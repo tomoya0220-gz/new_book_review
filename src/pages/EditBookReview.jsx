@@ -17,7 +17,6 @@ export const EditBookReview = () => {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        console.log('Fetching review for id:', id);
         const token = cookies.token;
         if (!token) {
           throw new Error('認証トークンがありません');
@@ -28,13 +27,11 @@ export const EditBookReview = () => {
           },
         });
         const data = response.data;
-        console.log('Fetched data:', data);
         setTitle(data.title);
         setBookUrl(data.url);
         setDetail(data.detail);
         setReview(data.review);
       } catch (error) {
-        console.error('Error fetching review:', error);
         setMessage('書籍情報の取得に失敗しました');
       }
     };
@@ -56,7 +53,6 @@ export const EditBookReview = () => {
       setMessage('書籍レビューを更新しました');
       navigate(`/books/${id}`);
     } catch (error) {
-      console.error('Error updating review:', error);
       setMessage('書籍レビューの更新に失敗しました');
     }
   };
@@ -75,7 +71,6 @@ export const EditBookReview = () => {
       setMessage('書籍レビューを削除しました');
       navigate('/public/books');
     } catch (error) {
-      console.error('Error deleting review:', error);
       setMessage('書籍レビューの削除に失敗しました');
     }
   };

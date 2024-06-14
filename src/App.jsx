@@ -12,7 +12,6 @@ function App() {
 
   useEffect(() => {
     const token = cookies.get('token');
-    console.log('Token from cookies:', token);
     if (token) {
       dispatch(signIn({ token }));
     }

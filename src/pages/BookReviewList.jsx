@@ -19,23 +19,18 @@ export const BookReviewList = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        console.log('Fetchinig reviews for page:', currentPage);
         const offset = (currentPage - 1) * reviewsPerPage;
         const response = await axios.get(`${url}/public/books`, {
           params: { offset, limit: reviewsPerPage }
         });
-        console.log('Response data:', response.data);
         if (Array.isArray(response.data)) {
           setReviews(response.data);
           setTotalReviews(response.data.length);
           setLoading(false);
-          console.log('Response set to:', response.data);
         } else {
-          console.error('Invalid response format:', response.data);
           setError('Invalid response format');
         }
       } catch (error) {
-        console.error('Error fetching reviews:', error);
         setError('書籍レビューの取得に失敗しました');
       }
     };
@@ -57,7 +52,6 @@ export const BookReviewList = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log('ログが送信されました:', reviewId);
     } catch (error) {
       console.error('ログの送信に失敗しました:', error);
     }
@@ -67,8 +61,6 @@ export const BookReviewList = () => {
     await handleLog(reviewId);
     navigate(`/books/${reviewId}`);
   };
-
-  console.log('Rendering BookReviewList with currentPage:', currentPage);
 
   if (error) {
     return <div>{error}</div>;
